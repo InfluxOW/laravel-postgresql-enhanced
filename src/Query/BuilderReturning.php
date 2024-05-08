@@ -219,7 +219,7 @@ trait BuilderReturning
      *
      * @return \Illuminate\Support\Collection<int, object>
      */
-    public function upsertReturning(array $values, array|string $uniqueBy, ?array $update = null, array $returning = ['*']): Collection
+    public function upsertReturning(array $values, array|string $uniqueBy, ?string $constraint = null, ?array $update = null, array $returning = ['*']): Collection
     {
         if (empty($values)) {
             return collect();
@@ -252,8 +252,23 @@ trait BuilderReturning
             })->all()
         ));
 
-        $sqlUpsert = $this->getGrammar()->compileUpsert($this, $values, (array) $uniqueBy, $update);
-        $sqlReturning = $this->getGrammar()->compileReturning($this, $returning);
+        $grammar = $this->getGrammar();
+
+        if (null === $constraint) {
+            $sqlUpsert = $grammar->compileUpsert($this, $values, (array) $uniqueBy, $update);
+        } else {
+            $sqlInsert = $grammar->compileInsert($this, $values);
+
+            $columns = collect($update)->map(function ($value, $key) use ($grammar) {
+                return is_numeric($key)
+                    ? $grammar->wrap($value).' = '.$grammar->wrap('excluded').'.'.$grammar->wrap($value)
+                    : $grammar->wrap($key).' = '.$grammar->parameter($value);
+            })->implode(', ');
+
+            $sqlUpsert = "{$sqlInsert} on conflict ({$grammar->columnize((array) $uniqueBy)}) WHERE ({$constraint}) do update set {$columns}";
+        }
+
+        $sqlReturning = $grammar->compileReturning($this, $returning);
         $bindings = [...$this->bindings['expressions'], ...$bindings];
 
         return collect(

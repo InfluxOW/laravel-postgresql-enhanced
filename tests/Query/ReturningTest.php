@@ -363,7 +363,7 @@ class ReturningTest extends TestCase
         $queries = $this->withQueryLog(function (): void {
             $result = $this->getConnection()
                 ->table('example')
-                ->upsertReturning([['str' => 'Dm2zecf4'], ['str' => 'P0ttyoss']], ['str'], []);
+                ->upsertReturning([['str' => 'Dm2zecf4'], ['str' => 'P0ttyoss']], ['str'], null, []);
 
             $this->assertInstanceOf(Collection::class, $result);
             $this->assertEquals([
@@ -385,7 +385,7 @@ class ReturningTest extends TestCase
         $queries = $this->withQueryLog(function (): void {
             $result = $this->getConnection()
                 ->table('example')
-                ->upsertReturning([['str' => 'KAaNsEnm'], ['str' => 'Hw2i45Ml']], ['str'], [], ['str']);
+                ->upsertReturning([['str' => 'KAaNsEnm'], ['str' => 'Hw2i45Ml']], ['str'], null, [], ['str']);
 
             $this->assertInstanceOf(Collection::class, $result);
             $this->assertEquals([
@@ -407,7 +407,7 @@ class ReturningTest extends TestCase
         $queries = $this->withQueryLog(function (): void {
             $result = $this->getConnection()
                 ->table('example')
-                ->upsertReturning([['str' => 'KlBTohfj'], ['str' => 'L6dgtF5Y']], ['str'], ['str']);
+                ->upsertReturning([['str' => 'KlBTohfj'], ['str' => 'L6dgtF5Y']], ['str'], null, ['str']);
 
             $this->assertInstanceOf(Collection::class, $result);
             $this->assertEquals([
@@ -429,7 +429,7 @@ class ReturningTest extends TestCase
         $queries = $this->withQueryLog(function (): void {
             $result = $this->getConnection()
                 ->table('example')
-                ->upsertReturning([['str' => 'PXC4tW9x'], ['str' => 'R04o7y3i']], ['str'], ['str'], ['str']);
+                ->upsertReturning([['str' => 'PXC4tW9x'], ['str' => 'R04o7y3i']], ['str'], null, ['str'], ['str']);
 
             $this->assertInstanceOf(Collection::class, $result);
             $this->assertEquals([

@@ -501,7 +501,7 @@ class BuilderReturningTest extends TestCase
         $queries = $this->withQueryLog(function (): void {
             $result = (new Example())
                 ->newQuery()
-                ->upsertReturning([['str' => 'WDrZatGx']], ['str'], []);
+                ->upsertReturning([['str' => 'WDrZatGx']], ['str'], null, []);
 
             $this->assertInstanceOf(Collection::class, $result);
             $this->assertEquals([['id' => 1, 'str' => 'WDrZatGx', 'created_at' => null, 'updated_at' => null, 'deleted_at' => null]], $result->toArray());
@@ -519,7 +519,7 @@ class BuilderReturningTest extends TestCase
         $queries = $this->withQueryLog(function (): void {
             $result = (new ExampleTimestamps())
                 ->newQuery()
-                ->upsertReturning([['str' => 'WDrZatGx']], ['str'], []);
+                ->upsertReturning([['str' => 'WDrZatGx']], ['str'], null, []);
 
             $this->assertInstanceOf(Collection::class, $result);
             $this->assertEquals([['id' => 1, 'str' => 'WDrZatGx', 'created_at' => now()->getTimestamp(), 'updated_at' => now()->getTimestamp(), 'deleted_at' => null]], $result->toArray());
@@ -537,7 +537,7 @@ class BuilderReturningTest extends TestCase
         $queries = $this->withQueryLog(function (): void {
             $result = (new Example())
                 ->newQuery()
-                ->upsertReturning([['str' => 'WdSnJCZP']], ['str'], [], ['str']);
+                ->upsertReturning([['str' => 'WdSnJCZP']], ['str'], null, [], ['str']);
 
             $this->assertInstanceOf(Collection::class, $result);
             $this->assertEquals([['str' => 'WdSnJCZP']], $result->toArray());
@@ -555,7 +555,7 @@ class BuilderReturningTest extends TestCase
         $queries = $this->withQueryLog(function (): void {
             $result = (new ExampleTimestamps())
                 ->newQuery()
-                ->upsertReturning([['str' => 'WdSnJCZP']], ['str'], [], ['str']);
+                ->upsertReturning([['str' => 'WdSnJCZP']], ['str'], null, [], ['str']);
 
             $this->assertInstanceOf(Collection::class, $result);
             $this->assertEquals([['str' => 'WdSnJCZP']], $result->toArray());
@@ -573,7 +573,7 @@ class BuilderReturningTest extends TestCase
         $queries = $this->withQueryLog(function (): void {
             $result = (new Example())
                 ->newQuery()
-                ->upsertReturning([['str' => 'PeKB2qK5']], ['str'], ['str']);
+                ->upsertReturning([['str' => 'PeKB2qK5']], ['str'], null, ['str']);
 
             $this->assertInstanceOf(Collection::class, $result);
             $this->assertEquals([['id' => 1, 'str' => 'PeKB2qK5', 'created_at' => null, 'updated_at' => null, 'deleted_at' => null]], $result->toArray());
@@ -591,7 +591,7 @@ class BuilderReturningTest extends TestCase
         $queries = $this->withQueryLog(function (): void {
             $result = (new ExampleTimestamps())
                 ->newQuery()
-                ->upsertReturning([['str' => 'PeKB2qK5']], ['str'], ['str']);
+                ->upsertReturning([['str' => 'PeKB2qK5']], ['str'], null, ['str']);
 
             $this->assertInstanceOf(Collection::class, $result);
             $this->assertEquals([['id' => 1, 'str' => 'PeKB2qK5', 'created_at' => now()->getTimestamp(), 'updated_at' => now()->getTimestamp(), 'deleted_at' => null]], $result->toArray());
@@ -609,7 +609,7 @@ class BuilderReturningTest extends TestCase
         $queries = $this->withQueryLog(function (): void {
             $result = (new Example())
                 ->newQuery()
-                ->upsertReturning([['str' => 'MjcznPbN']], ['str'], ['str'], ['str']);
+                ->upsertReturning([['str' => 'MjcznPbN']], ['str'], null, ['str'], ['str']);
 
             $this->assertInstanceOf(Collection::class, $result);
             $this->assertEquals([['str' => 'MjcznPbN']], $result->toArray());
@@ -627,7 +627,7 @@ class BuilderReturningTest extends TestCase
         $queries = $this->withQueryLog(function (): void {
             $result = (new ExampleTimestamps())
                 ->newQuery()
-                ->upsertReturning([['str' => 'MjcznPbN']], ['str'], ['str'], ['str']);
+                ->upsertReturning([['str' => 'MjcznPbN']], ['str'], null, ['str'], ['str']);
 
             $this->assertInstanceOf(Collection::class, $result);
             $this->assertEquals([['str' => 'MjcznPbN']], $result->toArray());
