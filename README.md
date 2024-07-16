@@ -28,9 +28,11 @@ composer require tpetry/laravel-postgresql-enhanced
     - [Views](#views)
         - [Materialized Views](#materialized-views)
     - [Indexes](#indexes)
+        - [Concurrently](#concurrently)
         - [Nulls Not Distinct](#nulls-not-distinct)
         - [Partial Indexes](#partial-indexes)
         - [Include Columns](#include-columns)
+        - [If Not Exists](#if-not-exists)
         - [Storage Parameters](#storage-parameters-index)
         - [Functional Indexes / Column Options](#functional-indexes--column-options)
         - [Fulltext Indexes](#fulltext-indexes)
@@ -81,19 +83,10 @@ However, this package is integrated with specific IDE combinations:
 ## PHPStan
 
 This extension is adding a lot of missing PostgreSQL functionality to Laravel.
-If you are using [PHPStan](https://phpstan.org/) to statically analyze your code, you may get errors because PHPStan doesn't know of the functionality added to Laravel:
+A custom set of [PHPStan](https://phpstan.org/) extensions have been developed to get full static analysis support!
 
-```
- ------ ----------------------------------------------------------------------------------- 
-  Line   Console/Commands/DeleteOldUsers.php                                                           
- ------ ----------------------------------------------------------------------------------- 
-  36     Call to an undefined method Illuminate\Database\Query\Builder::deleteReturning().  
- ------ ----------------------------------------------------------------------------------- 
-```
-
-To solve this problem a custom set of PHPStan extensions have been developed to get full static analysis support for Laravel 9!
-You should first install [Larastan](https://github.com/nunomaduro/larastan) to get PHPStan support for Laravel and then activate the PostgreSQL PHPStan extension.
-Just add the following path to your `includes` list in `phpstan.neon`, your config should now look like this:
+All features provided this extension are automatically recognized by the [phpstan/extension-installer](https://github.com/phpstan/extension-installer).
+Otherwise, you have to manually add the following path to your `includes` list in `phpstan.neon`, your config should now look like this:
 
 ```
 includes:
@@ -394,6 +387,34 @@ Schema::table('users', function(Blueprint $table) {
 In addition to the Laravel methods to drop indexes, methods to drop indexes if they exist have been added.
 The methods `dropFullTextIfExists`, `dropIndexIfExists`, `dropPrimaryIfExists`, `dropSpatialIndexIfExists` and `dropSpatialIndexIfExists` match the semantics of their laravel originals.
 
+#### Concurrently
+
+With PostgreSQL, you can say goodbye to half-executed migrations on errors and the tedious effort to restore the database to a stable state.
+This is all thanks to its transactional approach: either all changes of a migration to your database will succeed or will be rolled back.
+Yay!
+Because of that, creating an index on a big table will take a long time and block all SQL queries during that time.
+You can now instruct PostgreSQL to create the index in the background without blocking any SQL query, but you must opt out of running those changes in a transaction.
+
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Tpetry\PostgresqlEnhanced\Schema\Blueprint;
+use Tpetry\PostgresqlEnhanced\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public $withinTransaction = false;
+
+    public function up(): void
+    {
+        Schema::table('blog_visits', function (Blueprint $table) {
+            $table->index(['url', 'ip_address'])->concurrently();
+        });
+    }
+};
+```
+
 #### Nulls Not Distinct
 
 NULL values in unique indexes are handled in a non-comprehensible way for most developers.
@@ -451,6 +472,27 @@ Schema::table('users', function(Blueprint $table) {
 });
 ```
 Columns are included in an index with the `include` method on an index created by `index()`, `spatialIndex` or `uniqueIndex`.
+
+#### If Not Exists
+
+Sometimes, you fix performance issues by testing new indexes on the production database rather than pushing a new migration each time.
+But when you find the perfect one, you should also make a migration for it.
+Dropping the existing index to recreate it by the migration is silly.
+Right?
+You can now skip the index creation from the migration when the exact index already exists.
+
+```php
+use Tpetry\PostgresqlEnhanced\Schema\Blueprint;
+use Tpetry\PostgresqlEnhanced\Support\Facades\Schema;
+
+Schema::table('invoices', function(Blueprint $table) {
+    $table->index(['target', 'division', 'date'])->ifNotExists();
+});
+```
+
+> [!TIP]
+> Indexes are determined to be identical by their (automatically-generated) name.
+> Either create the index statement to run in production by temporary migrations from your development machine or use specific index names.
 
 #### Storage Parameters (Index)
 
@@ -1260,6 +1302,8 @@ Schema::create('comments', function (Blueprint $table) {
 
 # Breaking Changes
 
+* 0.39.0 -> 0.40.0
+  * The Enhanced PostgreSQL Driver PHPStan extension is now automatically registered with the PHPStan Extension Installer. The manual registration of the extension needs to be removed when PHPStan crashed because the extension is registered twice.
 * 0.35.0 -> 0.36.0
     * Some query builder methods had to be changed because they've now overlapped with new ones added by Laravel 10.47:
       * `whereAll` -> `whereAllValues`

@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.40.1] - 2024-07-15
+### Fixed
+* Changing compression mode conflicted with upstream Laravel 11.x changes
+
+## [0.40.0] - 2024-06-28
+### Added
+* PHPStan Extension Installer Support
+* Doctrine DBAL 4 Support (deep Laravel 11 dependency)
+
+## [0.39.0] - 2024-05-21
+### Added
+* `concurrently()` modifier for index creation
+
 ## [0.38.0] - 2024-04-22
 ### Added
 * UUIDv7 expression
