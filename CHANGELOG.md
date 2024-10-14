@@ -4,12 +4,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2024-09-27
+### Backward Incompatible Changes
+* The dimensions value for the `vector` migration type is now required to copy the behavior of Laravel 11.25.0
+
+## [1.1.1] - 2024-09-23
+### Fixed
+* Support PostgreSQL's `^@` starts with operator.
+
+## [1.1.0] - 2024-09-23
+### Fixed
+* Eager loading and lazy loading prevention was not implemented for lazyByCursor()
+
+### Added
+* `orderByNullsFirst`, `orderByNullsLast` and `$nulls` parameter for `orderBy`
+
+## [1.0.1] - 2024-08-05
+### Fixed
+* Migration failed when automatic aliases had been disabled in Laravel
+
 ## [1.0.0] - 2024-07-31
 ### Backward Incompatible Changes
 * The `whereLike` and `orWhereLike` had been changed to the behavior of Laravel 11.17.0
 
 ### Fixed
-Migration failed when automatic aliases had been disabled in Laravel
+* Migration failed when automatic aliases had been disabled in Laravel
 
 ## [0.40.2] - 2024-07-16
 ### Fixed

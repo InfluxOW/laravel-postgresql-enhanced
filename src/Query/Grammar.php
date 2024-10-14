@@ -11,6 +11,7 @@ class Grammar extends PostgresGrammar
 {
     use GrammarCte;
     use GrammarFullText;
+    use GrammarOrder;
     use GrammarReturning;
     use GrammarWhere;
 
@@ -25,7 +26,7 @@ class Grammar extends PostgresGrammar
         '=', '<', '>', '<=', '>=', '<>', '!=',
         'like', 'not like', 'between', 'ilike', 'not ilike',
         '~', '&', '|', '#', '<<', '>>', '<<=', '>>=',
-        '&&', '@>', '<@', '?', '?|', '?&', '||', '-', '@?', '@@', '#-',
+        '&&', '@>', '<@', '?', '?|', '?&', '||', '-', '@?', '@@', '#-', '^@',
         'is distinct from', 'is not distinct from',
         '<->', '<=>', '<#>',
     ];

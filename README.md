@@ -1163,6 +1163,26 @@ $query->whereIntegerArrayMatches('tags', '3&4&(5|6)&!7');
 
 ### Order By
 
+#### NULLS FIRST/LAST
+
+By default, `NULL` values are sorted before everything in descending order and after everything in ascending order.
+This may not be your preferred way of ordering when e.g. displaying in a table to users.
+With the nulls first/last option, you can specify the exact behaviour you want:
+
+```php
+$query->orderBy($column, string $direction = 'asc'|'desc', string $nulls = 'default'|'first'|'last');
+$query->orderByNullsFirst($column, string $direction = 'asc'|'desc', string $nulls = 'default'|'first'|'last');
+$query->orderByNullsLast($column, string $direction = 'asc'|'desc', string $nulls = 'default'|'first'|'last');
+
+// Sort the table by the age descending with all NULL values presented last.
+$query->orderBy('age', 'desc', nulls: 'last');
+$query->orderByNullsLast('age', 'desc');
+```
+
+> [!WARNING]
+> You have to create a matching index when using a non-default sorting order - a standard one does not work!
+> The exact index `$table->index('age DESC NULLS LAST')` matches the query or `$table->index('age NULLS FIRT')` because of the default ascending column order.
+
 #### Vector Similarity
 
 With the `orderByVectorSimilarity` method you can compare a column storing embeddings to other embeddings.
@@ -1314,6 +1334,9 @@ Schema::create('comments', function (Blueprint $table) {
 
 # Breaking Changes
 
+* **2.0.0**
+  * Laravel 11.25 released a new `vector` migration type so the behaviour had to be aligned with Laravel's implementation:
+    * The `$dimensions` parameter (formerly with a default of 1536) is now required
 * **1.0.0**
   * Laravel 11.17 released a new `whereLike` and `orWhereLike` builder method so the behaviour had to be aligned with Laravel's implementation:
     * The value is now searched case-insensitive by default instead of case-sensitive
